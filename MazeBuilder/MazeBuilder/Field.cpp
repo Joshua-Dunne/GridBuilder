@@ -1,10 +1,16 @@
 #include "Field.h"
 
+/// <summary>
+/// Default constructor for Field
+/// </summary>
 Field::Field()
 {
 	fillGrid();
 }
 
+/// <summary>
+/// Fills the Grid with necessary information.
+/// </summary>
 void Field::fillGrid()
 {
 	for (int y = 0; y < MAX_WIDTH; ++y)
@@ -24,9 +30,12 @@ void Field::fillGrid()
 		std::cout << std::endl;
 	}
 
-	GameGrid[5][5] = 'C';
+	GameGrid[m_chestPos[0]][m_chestPos[1]] = 'C';
 }
 
+/// <summary>
+/// Displays the Grid in the Console window
+/// </summary>
 void Field::generateGrid()
 {
 	for (int y = 0; y < MAX_WIDTH; ++y)
@@ -41,9 +50,12 @@ void Field::generateGrid()
 	}
 }
 
+/// <summary>
+///  Move the Player via the 2D array.
+/// </summary>
+/// <param name="t_direction">Direction to move the Player</param>
 void Field::movePlayer(int t_direction)
 {
-
 	if (t_direction == static_cast<int>(Direction::NORTH))
 	{
 		if (m_player.getYPos() > 0)
@@ -88,4 +100,53 @@ void Field::movePlayer(int t_direction)
 			GameGrid[m_player.getYPos()][m_player.getXPos()] = 'P'; // set where the player is to P
 		}
 	} 
+}
+
+/// <summary>
+/// Check for Collisions between Player and Chest.
+/// Repeat this for any other collisions.
+/// </summary>
+/// <param name="t_direction">Direction Player is moving towards</param>
+void Field::checkCollision(int t_direction)
+{
+	if (t_direction == static_cast<int>(Direction::NORTH))
+	{
+		if (m_player.getXPos() == m_chestPos[0] && m_player.getYPos() == m_chestPos[1] + 1)
+		{
+			std::cout << "Walking into Chest from Top\n";
+			m_player.addGold(5);
+			m_chestPos[0] = -99; // move chest off the grid
+			m_chestPos[1] = -99; // move chest off the grid
+		}
+	}
+	else if (t_direction == static_cast<int>(Direction::SOUTH))
+	{
+		if (m_player.getXPos() == m_chestPos[0] && m_player.getYPos() == m_chestPos[1] - 1)
+		{
+			std::cout << "Walking into Chest from Bottom\n";
+			m_player.addGold(5);
+			m_chestPos[0] = -99; // move chest off the grid
+			m_chestPos[1] = -99; // move chest off the grid
+		}
+	}
+	else  if (t_direction == static_cast<int>(Direction::EAST))
+	{
+		if (m_player.getXPos() == m_chestPos[0] - 1 && m_player.getYPos() == m_chestPos[1])
+		{
+			std::cout << "Walking into Chest from Right\n";
+			m_player.addGold(5);
+			m_chestPos[0] = -99; // move chest off the grid
+			m_chestPos[1] = -99; // move chest off the grid
+		}
+	}
+	else if (t_direction == static_cast<int>(Direction::WEST))
+	{
+		if (m_player.getXPos() == m_chestPos[0] + 1 && m_player.getYPos() == m_chestPos[1])
+		{
+			std::cout << "Walking into Chest from Left\n";
+			m_player.addGold(5);
+			m_chestPos[0] = -99; // move chest off the grid
+			m_chestPos[1] = -99; // move chest off the grid
+		}
+	}
 }
